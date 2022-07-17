@@ -55,11 +55,11 @@ public class MPControllerSample {
         int iMax;
 
         if (a.getLength() > b.getLength()) {
-            iMax = a.getLength() + 1;
+            iMax = a.getLength();
         } else {
-            iMax = b.getLength() + 1;
+            iMax = b.getLength();
         }
-        c.setData(0, 0);
+        c.setData(0, 0L);
 
         for (i = 0; i < iMax; i++) {
             if (i <= a.getLength()) {
@@ -70,15 +70,11 @@ public class MPControllerSample {
             }
 
             // 要素の大きさが9桁以内になるまで繰り上げを続ける
-            if (c.getData()[i] >= 1000000000) {
-                int counter = 1;
-                while (c.getData()[i] >= 1000000000) {
-                    c.setData(i + 1, counter);
-                    c.getData()[i] -= 1000000000;
-                    counter++;
-                }
+            if (c.getData()[i] >= 1000000000L) {
+                    c.setData(i + 1, 1L);
+                    c.getData()[i] -= 1000000000L;
             } else {
-                c.setData(i + 1, 0);
+                c.setData(i + 1, 0L);
             }
         }
         if (c.getData()[i] == 0) {
@@ -95,46 +91,39 @@ public class MPControllerSample {
      * @param c
      */
     public void multiple(MP a, MP b, MP c) {
-        int i;
         int iMax;
 
+        MP none = new MP(); // 空配列
+        MP tmp = new MP();  // 計算時に用いる一時的な配列
+        MP holder = new MP();   // 計算結果を保持する配列
+
         if (a.getLength() > b.getLength()) {
-            iMax = a.getLength() + 1;
+            iMax = a.getLength();
         } else {
-            iMax = b.getLength() + 1;
+            iMax = b.getLength();
         }
-        c.setData(0, 0);
 
-        for (i = 0; i < iMax; i++) {
-
-            // TODO b.getData[0]が0になるまでa.getData[i]を足す
-            while (b.getData()[0] > 0) {
-                if (i <= a.getLength()) {
-
-                    // TODO オーバーフローの判定
-                    c.getData()[i] += a.getData()[i];
-
-                }
-                b.getData()[0]--;
-            }
-
-            // 要素の大きさが9桁以内になるまで繰り上げを続ける
-            if (c.getData()[i] >= 1000000000) {
-                int counter = 1;
-                while (c.getData()[i] >= 1000000000) {
-                    c.setData(i + 1, counter);
-                    c.getData()[i] -= 1000000000;
-                    counter++;
-                }
-            } else {
-                c.setData(i + 1, 0);
+        for (int i = 0; i < b.getData()[0]; i++) {
+            add(a, none, tmp);
+            for (int j = 0; j < 100; j++) {
+                holder.setData(j, holder.getData()[j] + tmp.getData()[j]);
             }
         }
-        if (c.getData()[i] == 0) {
-            c.setLength(i);
+
+        // 最終的な配列をcに格納
+        for (int i = 0; i < 100; i++) {
+            c.setData(i, c.getData()[i] + holder.getData()[i]);
+
+            while (c.getData()[i] >= 1000000000L) {
+                    c.setData(i + 1, c.getData()[i + 1] + 1L);
+                    c.getData()[i] -= 1000000000L;
+            }
+        }
+
+        if (c.getData()[iMax] == 0) {
+            c.setLength(iMax);
         } else {
-            c.setLength(i + 1);
+            c.setLength(iMax + 1);
         }
     }
-
 }

@@ -45,17 +45,16 @@ public class App
     public static void main(String[] args) {
         MPControllerSample mpControllerSample = new MPControllerSample();
         MP mp = new MP();
-        String str = "3235241983659173649276359141265193278567";
+        String str = "9223372036854775807";
         mpControllerSample.set(mp, str);
         mpControllerSample.print(mp);
 
         MP mpA = new MP();
         MP mpB = new MP();
         MP mpC = new MP();
-        mpA.setData(0, 9223372036854775807L);
-        mpB.setData(0, 3);
-//        mpControllerSample.add(mpA, mpB, mpC);
-//        mpControllerSample.print(mpC);
+        mpControllerSample.set(mpA, "9223372036854775807");
+        mpControllerSample.set(mpB, "256");
+        // 乗算処理
         mpControllerSample.multiple(mpA, mpB, mpC);
         mpControllerSample.print(mpC);
     }
